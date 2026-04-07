@@ -1,0 +1,102 @@
+PEERWIRE
+========
+
+PeerWire is a distributed file sharing system implemented in C++. It eliminates reliance on a single server by allowing peers to both download and upload file chunks concurrently.
+
+
+OVERVIEW
+--------
+
+The system follows a tracker-based architecture. Peers register themselves and discover other peers sharing the same file. Each file is divided into fixed-size chunks, and each chunk is verified using cryptographic hashes (SHA-256) to ensure data integrity.
+
+
+FEATURES
+--------
+
+* Decentralized file transfer (P2P)
+* Tracker-based peer discovery
+* Parallel chunk downloading
+* Cryptographic data verification
+* Cross-platform support (Windows/Linux)
+
+
+BUILD INSTRUCTIONS
+------------------
+
+Prerequisites
+* C++17 compliant compiler
+* CMake 3.10 or higher
+
+Building
+You can use the provided Makefile or scripts:
+
+  Using Make:
+  make
+
+  Using Script:
+  scripts/build.sh
+
+The executables (tracker and peer) will be placed in the build/bin directory.
+
+
+USAGE
+-----
+
+TUI Client & Daemon
+Use the convenience scripts in the scripts/ directory to run the application components:
+* scripts/run_tracker.sh: Starts the Tracker.
+* scripts/run_daemon.sh: Starts the Daemon.
+* scripts/tui.sh: Starts the TUI Client.
+
+Once the application is running:
+1. Enter your listening port (e.g., 9001) when prompted.
+2. Default tracker is 127.0.0.1:8080. Use "tracker <IP> <Port>" to change it.
+3. Use commands:
+   * seed <file>
+   * download <hash> <outfile>
+   * help
+
+CLI Mode (Legacy)
+
+1. Start Support Server (Tracker)
+The tracker coordinates peers.
+  ./build/bin/tracker
+
+2. Seeding a File
+To share a file, start a peer in seed mode.
+  ./build/bin/peer <MyPort> <TrackerIP> <TrackerPort> seed <FilePath>
+
+  Example:
+  ./build/bin/peer 9001 127.0.0.1 8080 seed mydata.txt
+
+3. Downloading a File
+To download a file, start a peer in download mode using the file hash obtained from the seeder.
+  ./build/bin/peer <MyPort> <TrackerIP> <TrackerPort> download <FileHash> <OutputFileName>
+
+  Example:
+  ./build/bin/peer 9002 127.0.0.1 8080 download a1b2c3... downloaded_data.txt
+
+
+TESTING
+-------
+
+Unit Tests
+The project includes unit tests for core utilities (SHA256).
+  ./build/bin/unit_tests
+
+Integration Tests
+A Python script is provided to verify the full flow (Tracker + Seeder + Downloader).
+  python run_tests.py
+
+  Note: This script requires Python 3 and builds the project automatically if needed.
+
+
+DOCUMENTATION
+-------------
+
+See the docs/ directory for detailed information:
+* Detailed Walkthrough: docs/walkthrough.md
+* System Architecture: docs/architecture.md
+* Architecture & Design Refactor: docs/design_refactor.md
+* Communication Protocol Specification: docs/protocol.md
+* Project Tasks: docs/tasks.md
